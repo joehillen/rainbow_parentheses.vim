@@ -4,43 +4,47 @@
 "               2011-10-12: Use less code.  Leave room for deeper levels.
 "==============================================================================
 
-let s:pairs = [
-	\ ['brown',       'RoyalBlue3'],
-	\ ['Darkblue',    'SeaGreen3'],
-	\ ['darkgray',    'DarkOrchid3'],
-	\ ['darkgreen',   'firebrick3'],
-	\ ['darkcyan',    'RoyalBlue3'],
-	\ ['darkred',     'SeaGreen3'],
-	\ ['darkmagenta', 'DarkOrchid3'],
-	\ ['brown',       'firebrick3'],
-	\ ['gray',        'RoyalBlue3'],
-	\ ['black',       'SeaGreen3'],
-	\ ['darkmagenta', 'DarkOrchid3'],
-	\ ['Darkblue',    'firebrick3'],
-	\ ['darkgreen',   'RoyalBlue3'],
-	\ ['darkcyan',    'SeaGreen3'],
-	\ ['darkred',     'DarkOrchid3'],
-	\ ['red',         'firebrick3'],
-	\ ]
-let s:pairs = exists('g:rbpt_colorpairs') ? g:rbpt_colorpairs : s:pairs
-let s:max = exists('g:rbpt_max') ? g:rbpt_max : max([len(s:pairs), 16])
+let s:colors = [   'brown'
+               \ , 'darkblue'
+               \ , 'darkgray'
+               \ , 'darkgreen'
+               \ , 'darkcyan'
+               \ , 'darkred'
+               \ , 'darkmagenta'
+               \ , 'brown'
+               \ , 'gray'
+               \ , 'black'
+               \ , 'darkmagenta'
+               \ , 'darkblue'
+               \ , 'darkgreen'
+               \ , 'darkcyan'
+               \ , 'darkred'
+               \ , 'red'
+               \ ]
+let s:colors = exists('g:rbpt_colors') ? g:rbpt_colors : s:colors
+let s:max = exists('g:rbpt_max') ? g:rbpt_max : max([len(s:colors), 16])
 let s:loadtgl = exists('g:rbpt_loadcmd_toggle') ? g:rbpt_loadcmd_toggle : 0
-let s:types = [['(',')'],['\[','\]'],['{','}'],['<','>']]
+let s:bold = exists('g:rbpt_bold') ? g:rbpt_bold : 0
+let s:types = [['(',')'],['\[','\]'],['<','>']]
 
 func! s:extend()
-	if s:max > len(s:pairs)
-		cal extend(s:pairs, s:pairs)
+	if s:max > len(s:colors)
+		cal extend(s:colors, s:colors)
 		cal s:extend()
-	elseif s:max < len(s:pairs)
-		cal remove(s:pairs, s:max, -1)
+	elseif s:max < len(s:colors)
+		cal remove(s:colors, s:max, -1)
 	endif
 endfunc
 cal s:extend()
 
 func! rainbow_parentheses#activate()
 	let [id, s:active] = [1, 1]
-	for [ctermfg, guifg] in s:pairs
-		exe 'hi default level'.id.'c ctermfg='.ctermfg.' guifg='.guifg
+	for ctermfg in s:colors
+    if s:bold
+      exe 'hi default level'.id.'c ctermfg='.ctermfg.' cterm=bold'
+    else
+      exe 'hi default level'.id.'c ctermfg='.ctermfg
+    endif
 		let id += 1
 	endfor
 endfunc
